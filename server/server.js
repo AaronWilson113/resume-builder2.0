@@ -1,9 +1,17 @@
 const express = require('express');
 const path = require('path');
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql } = require('apollo-server');
+const { typeDefs, resolvers } = require("./schemas");
+const { authMiddleware } = require("./utils/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: authMiddleware
+});
 
 app.use(express.static('../client/dist'));
 app.use(express.urlencoded({ extended: true }));
